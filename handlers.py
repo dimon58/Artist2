@@ -1,3 +1,4 @@
+import io
 import logging
 
 from aiogram import types
@@ -21,7 +22,10 @@ async def draw(message: types.Message):
     await message.answer(f'Начинаю рисовать "{text}"')
 
     image = generate(text, chat_id=message.chat.id)[0]
-    await message.answer_photo(image.getvalue())
+    buffer = io.BytesIO()
+    image.save(buffer, format='PNG')
+
+    await message.answer_photo(buffer.getvalue())
 
 
 @dp.message_handler(commands=['help', 'h'])
