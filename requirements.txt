@@ -1,3 +1,7 @@
 cython
 wheel
 huggingface_hub
+coloredlogs
+aiogram
+psutil
+python-dotenv
