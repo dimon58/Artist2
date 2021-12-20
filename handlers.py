@@ -16,9 +16,11 @@ async def draw(message: types.Message):
         await message.answer("Напишите описание изображения. /draw *описание*")
         return
 
-    await message.answer('Начинаю рисовать...')
+    text = message.text[5:]
 
-    image = generate('Абоба', chat_id=message.chat.id)[0]
+    await message.answer(f'Начинаю рисовать "{text}"')
+
+    image = generate(text, chat_id=message.chat.id)[0]
     await message.answer_photo(image.getvalue())
 
 
