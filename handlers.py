@@ -1,18 +1,15 @@
 import logging
-import time
 
 from aiogram import types
-from tqdm.contrib.telegram import trange
 
-import settings
 from core import dp
+from services.inference_rudalle import generate
 
 logger = logging.getLogger('root.handlers')
 
 
 @dp.message_handler(commands=['draw'])
 async def draw(message: types.Message):
-    from services.inference_rudalle import generate
     logger.info(f'Draw "{message.text}" request by {message.from_user.id}')
 
     if len(message.text) == 5:
@@ -20,10 +17,9 @@ async def draw(message: types.Message):
         return
 
     await message.answer('Начинаю рисовать...')
-    async for i in trange(10, token=settings.TELEGRAM_BOT_TOKEN, chat_id=message.chat.id):
-        time.sleep(0.5)
 
-    generate('Абоба')
+    image = generate('Абоба', chat_id=message.chat.id)[0]
+    await message.answer_photo(image.getvalue())
 
 
 @dp.message_handler(commands=['help', 'h'])
