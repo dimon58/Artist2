@@ -20,7 +20,7 @@ elif ALLOWED_MEMORY <= 10.0:
 else:
     DALLE_BS = 5
 
-pretrained_path = PRETRAINED_PATH
+pretrained_path = PRETRAINED_PATH / 'rudalle'
 
 dalle = get_rudalle_model('Malevich', pretrained=True, fp16=True, device=DEVICE, cache_dir=pretrained_path)
 tokenizer = get_tokenizer(cache_dir=pretrained_path)

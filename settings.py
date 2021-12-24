@@ -45,7 +45,7 @@ ALLOWED_MEMORY = 3.5  # choose your GPU memory in GB, min value 3.5GB
 
 DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
 
-PRETRAINED_PATH = Path(__file__).parent / 'pretrained_models' / 'rudalle'
+PRETRAINED_PATH = Path(__file__).parent / 'pretrained_models'
 TEMP_FOLDER = Path(__file__).parent / 'temp'
 
 REALESRGAN_TILES = 350  # если много видеопамяти можно уменьшить до 0
