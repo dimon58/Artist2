@@ -14,7 +14,7 @@ from aiogram.types import ContentType
 import settings
 from core import dp
 from services.inference_realesrgan import upscale
-from services.utils import pil2tg
+from services.utils import send_photo
 
 logger = logging.getLogger('root.handlers')
 
@@ -55,7 +55,7 @@ async def failed_process_image(message: types.Message):
     return await message.reply("Нужно отправить изображение")
 
 
-@dp.message_handler(content_types=(ContentType.PHOTO, ContentType.DOCUMENT), state=UpscaleForm.image)
+@dp.message_handler(content_types=(ContentType.PHOTO, ContentType.DOCUMENT))
 async def process_image(message: types.Message, state: FSMContext):
     logger.info(f'Upscale image by user {message.from_user.id}')
 
@@ -83,6 +83,7 @@ async def process_image(message: types.Message, state: FSMContext):
     start = time.perf_counter()
 
     original_image = cv2.imread(str(image_path), cv2.IMREAD_UNCHANGED)
+    os.remove(image_path)
 
     upscaled_image = upscale(
         original_image,
@@ -92,12 +93,11 @@ async def process_image(message: types.Message, state: FSMContext):
         half=settings.HAFT_PRECISION
     )
 
-    upscaled_image = cv2.cvtColor(upscaled_image, cv2.COLOR_BGR2RGB)
-    pil_image = Image.fromarray(upscaled_image)
+    upscaled_image = Image.fromarray(cv2.cvtColor(upscaled_image, cv2.COLOR_BGR2RGB))
 
     end = time.perf_counter()
-    print(f'{pil_image.width // 4}x{pil_image.height // 4} upscaled in {end - start:.4f} sec')
+    print(f'{upscaled_image.width // 4}x{upscaled_image.height // 4} upscaled in {end - start:.4f} sec')
 
-    await message.answer_photo(pil2tg(pil_image))
+    ###################################################################################################################
 
-    os.remove(image_path)
+    await send_photo(message, upscaled_image, upscaled_image, 'upscaled.png')
