@@ -10,7 +10,10 @@ from rudalle.utils import seed_everything, torch_tensors_to_pil_list
 
 from settings import ALLOWED_MEMORY, DEVICE, TELEGRAM_BOT_TOKEN, PRETRAINED_PATH
 
-if ALLOWED_MEMORY < 5:
+if ALLOWED_MEMORY < 4.5:
+    DEVICE = 'cpu'
+    DALLE_BS = 1
+elif ALLOWED_MEMORY < 5:
     DALLE_BS = 1
 elif ALLOWED_MEMORY <= 10.0:
     DALLE_BS = 5
