@@ -80,7 +80,7 @@ def generate_codebooks(text, top_k, top_p, images_num, image_prompts=None, tempe
                 prompts_idx, prompts = image_prompts.image_prompts_idx, image_prompts.image_prompts
                 prompts = prompts.repeat(chunk_bs, 1)
 
-            progress_bar = get_progress_bar(range(out.shape[1], total_seq_length), 'Рисование', chat_id)
+            progress_bar = get_progress_bar(range(out.shape[1], total_seq_length), f'Рисование {chunk_bs} шт', chat_id)
 
             for idx in progress_bar:
                 idx -= text_seq_length
