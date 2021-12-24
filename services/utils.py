@@ -34,7 +34,7 @@ async def send_photo(message, pil_image, thumb_source, filename):
 
 
 def calc_approx_upscale_time(w, h):
-    a = 0.0829117 * settings.GPU_FP32_PERFORMANCE / 1.911
+    a = 0.0529117 * settings.GPU_FP32_PERFORMANCE / 1.911
     b = 9.79244
 
     time = int(w * h * a / 1000 + b)
