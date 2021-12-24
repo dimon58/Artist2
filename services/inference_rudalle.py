@@ -8,7 +8,7 @@ import transformers
 from rudalle import get_rudalle_model, get_tokenizer, get_vae
 from rudalle.utils import seed_everything, torch_tensors_to_pil_list
 
-from settings import ALLOWED_MEMORY, DEVICE, TELEGRAM_BOT_TOKEN, PRETRAINED_PATH
+from settings import ALLOWED_MEMORY, DEVICE, TELEGRAM_BOT_TOKEN, PRETRAINED_PATH, HAFT_PRECISION
 
 if ALLOWED_MEMORY < 4.5:
     DEVICE = 'cpu'
@@ -22,7 +22,7 @@ else:
 
 pretrained_path = PRETRAINED_PATH / 'rudalle'
 
-dalle = get_rudalle_model('Malevich', pretrained=True, fp16=True, device=DEVICE, cache_dir=pretrained_path)
+dalle = get_rudalle_model('Malevich', pretrained=True, fp16=HAFT_PRECISION, device=DEVICE, cache_dir=pretrained_path)
 tokenizer = get_tokenizer(cache_dir=pretrained_path)
 vae = get_vae(dwt=True, cache_dir=pretrained_path)
 

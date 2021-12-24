@@ -49,3 +49,4 @@ PRETRAINED_PATH = Path(__file__).parent / 'pretrained_models'
 TEMP_FOLDER = Path(__file__).parent / 'temp'
 
 REALESRGAN_TILES = 350  # если много видеопамяти можно уменьшить до 0
+HAFT_PRECISION = True

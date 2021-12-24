@@ -88,6 +88,7 @@ async def process_image(message: types.Message, state: FSMContext):
         original_image,
         tile=settings.REALESRGAN_TILES,
         face_enhance=True,
+        half=settings.HAFT_PRECISION
     )
 
     upscaled_image = cv2.cvtColor(upscaled_image, cv2.COLOR_BGR2RGB)
