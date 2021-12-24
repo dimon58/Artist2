@@ -6,7 +6,15 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+
+PRETRAINED_PATH = Path(__file__).parent / 'pretrained_models'
+TEMP_FOLDER = Path(__file__).parent / 'temp'
 LOGS_FOLDER = 'logs'
+
+ALLOWED_MEMORY = 3.5  # choose your GPU memory in GB, min value 3.5GB
+DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
+HAFT_PRECISION = True
 
 LOGGING_CONFIG = {
     'version': 1,
@@ -26,7 +34,7 @@ LOGGING_CONFIG = {
         'file_handler': {
             'class': 'logging.FileHandler',
             'formatter': 'default_formatter',
-            'filename': 'logs/log.log',
+            'filename': f'{LOGS_FOLDER}/log.log',
         },
     },
 
@@ -39,14 +47,4 @@ LOGGING_CONFIG = {
     }
 }
 
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-
-ALLOWED_MEMORY = 3.5  # choose your GPU memory in GB, min value 3.5GB
-
-DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
-
-PRETRAINED_PATH = Path(__file__).parent / 'pretrained_models'
-TEMP_FOLDER = Path(__file__).parent / 'temp'
-
 REALESRGAN_TILES = 350  # если много видеопамяти можно уменьшить до 0
-HAFT_PRECISION = True
