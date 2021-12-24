@@ -10,24 +10,18 @@ from rudalle.utils import seed_everything, torch_tensors_to_pil_list
 
 from settings import ALLOWED_MEMORY, DEVICE, TELEGRAM_BOT_TOKEN, PRETRAINED_PATH
 
-if ALLOWED_MEMORY < 4.5:
+if ALLOWED_MEMORY < 5:
     DALLE_BS = 1
-elif ALLOWED_MEMORY < 5.5:
-    DALLE_BS = 2
-elif ALLOWED_MEMORY < 6.5:
-    DALLE_BS = 3
-elif ALLOWED_MEMORY < 7.5:
-    DALLE_BS = 4
-elif ALLOWED_MEMORY < 8.5:
+elif ALLOWED_MEMORY <= 10.0:
     DALLE_BS = 5
-elif ALLOWED_MEMORY < 9.5:
-    DALLE_BS = 6
-elif ALLOWED_MEMORY < 10.5:
-    DALLE_BS = 7
 else:
-    DALLE_BS = 8
+    DALLE_BS = 5
 
 pretrained_path = PRETRAINED_PATH
+
+dalle = get_rudalle_model('Malevich', pretrained=True, fp16=True, device=DEVICE, cache_dir=pretrained_path)
+tokenizer = get_tokenizer(cache_dir=pretrained_path)
+vae = get_vae(dwt=True, cache_dir=pretrained_path)
 
 
 def print_stats():
@@ -71,10 +65,8 @@ def get_progress_bar(iterable, desc, chat_id=None):
 
 def generate_codebooks(text, top_k, top_p, images_num, image_prompts=None, temperature=1.0, bs=8,
                        seed=None, use_cache=True, chat_id=None):
-    print(f'Using {DEVICE}')
-    dalle = get_rudalle_model('Malevich', pretrained=True, fp16=False, device=DEVICE,
-                              cache_dir=pretrained_path)
-    tokenizer = get_tokenizer(cache_dir=pretrained_path)
+    if seed:
+        seed_everything(seed)
 
     vocab_size = dalle.get_param('vocab_size')
     text_seq_length = dalle.get_param('text_seq_length')
@@ -123,8 +115,6 @@ def generate_encoded(text, top_k, top_p, images_num, chat_id=None):
 
 
 def decode_codebooks(codebooks, chat_id=None):
-    vae = get_vae(dwt=True, cache_dir=pretrained_path)
-
     pil_images = []
 
     progress_bar = get_progress_bar(torch.cat(codebooks).cpu(), 'Декодирование', chat_id)
@@ -143,9 +133,6 @@ def generate(text='Пингвины радуются', top_k=1024, top_p=0.99, i
 
 
 def main():
-    """
-    Inference demo for Real-ESRGAN.
-    """
     parser = argparse.ArgumentParser()
     parser.add_argument('-t', '--text', type=str, default='Пингвины радуются', help='Input text')
     parser.add_argument('-o', '--output', type=str, default='output.jpg', help='Output filename')

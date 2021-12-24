@@ -13,11 +13,11 @@ logger = logging.getLogger('root.handlers')
 async def draw(message: types.Message):
     logger.info(f'Draw "{message.text}" request by {message.from_user.id}')
 
-    if len(message.text) == 5:
+    if len(message.text) <= 6:
         await message.answer("Напишите описание изображения. /draw *описание*")
         return
 
-    text = message.text[5:]
+    text = message.text[6:]
 
     await message.answer(f'Начинаю рисовать "{text}"')
 
