@@ -1,8 +1,10 @@
 import io
 
-from aiogram import types
-
 import settings
+
+
+class BytesWrapper(bytes):
+    name: str
 
 
 def pil2tg(image):
@@ -22,9 +24,30 @@ async def send_photo(message, pil_image, thumb_source, filename):
             pil_image.height <= settings.TELEGRAM_MAX_IMAGE_HEIGHT:
         return await message.answer_photo(pil2tg(pil_image))
 
-    prepared_image = types.InputFile(pil2tg(pil_image), filename=filename)
+    prepared_image = BytesWrapper(pil2tg(pil_image))
+    prepared_image.name = filename
 
     thumb_source.thumbnail((settings.TELEGRAM_MAX_THUMB_WIDTH, settings.TELEGRAM_MAX_THUMB_HEIGHT))
     thumb = pil2tg(thumb_source)
 
     return await message.answer_document(prepared_image, thumb=thumb)
+
+
+def calc_approx_upscale_time(w, h):
+    a = 0.0829117 * settings.GPU_FP32_PERFORMANCE / 1.911
+    b = 9.79244
+
+    time = int(w * h * a / 1000 + b)
+
+    seconds = time % 60
+    minutes = time // 60
+
+    approx_time = "Ожидаемое время"
+
+    if minutes > 0:
+        approx_time += f" {minutes} мин"
+
+    if seconds > 0:
+        approx_time += f" {seconds} сек"
+
+    return approx_time
