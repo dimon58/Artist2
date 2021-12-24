@@ -47,4 +47,28 @@ LOGGING_CONFIG = {
     }
 }
 
+
+class RealESRGanModelsList:
+    RealESRGAN_x4plus = 'RealESRGAN_x4plus'
+    RealESRNet_x4plus = 'RealESRNet_x4plus'
+    RealESRGAN_x4plus_anime_6B = 'RealESRGAN_x4plus_anime_6B'
+    RealESRGAN_x2plus = 'RealESRGAN_x2plus'
+    RealESRGANv2_anime_xsx2 = 'RealESRGANv2-anime-xsx2'
+    RealESRGANv2_animevideo_xsx2_nousm = 'RealESRGANv2-animevideo-xsx2-nousm'
+    RealESRGANv2_animevideo_xsx2 = 'RealESRGANv2-animevideo-xsx2'
+    RealESRGANv2_anime_xsx4 = 'RealESRGANv2-anime-xsx4'
+    RealESRGANv2_animevideo_xsx4_nousm = 'RealESRGANv2-animevideo-xsx4-nousm'
+    RealESRGANv2_animevideo_xsx4 = 'RealESRGANv2-animevideo-xsx4'
+
+
+REALESRGAN_MODEL = RealESRGanModelsList.RealESRGAN_x4plus
 REALESRGAN_TILES = 350  # если много видеопамяти можно уменьшить до 0
+
+RUDALLE_SUPERRESOLUTION = True  # включить улучшение качества изображений после ru-dalle
+RUDALLE_REALESRGAN_MODEL_UPSCALER = RealESRGanModelsList.RealESRGAN_x4plus
+
+TELEGRAM_MAX_IMAGE_WIDTH = 1280
+TELEGRAM_MAX_IMAGE_HEIGHT = 1280
+
+TELEGRAM_MAX_THUMB_WIDTH = 320
+TELEGRAM_MAX_THUMB_HEIGHT = 320

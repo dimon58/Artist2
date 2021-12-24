@@ -86,6 +86,7 @@ async def process_image(message: types.Message, state: FSMContext):
 
     upscaled_image = upscale(
         original_image,
+        model_name=settings.REALESRGAN_MODEL,
         tile=settings.REALESRGAN_TILES,
         face_enhance=True,
         half=settings.HAFT_PRECISION
@@ -95,7 +96,7 @@ async def process_image(message: types.Message, state: FSMContext):
     pil_image = Image.fromarray(upscaled_image)
 
     end = time.perf_counter()
-    print(f'{pil_image.width}x{pil_image.height} upscaled in {end - start:.4f} sec')
+    print(f'{pil_image.width // 4}x{pil_image.height // 4} upscaled in {end - start:.4f} sec')
 
     await message.answer_photo(pil2tg(pil_image))
 

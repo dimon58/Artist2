@@ -3,6 +3,9 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+import cv2
+import numpy as np
+from PIL import Image
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
@@ -126,3 +129,31 @@ def upscale(
 
     else:
         return output
+
+
+def upscale_pil(
+        input_pil_image,
+        model_name: str = 'RealESRGAN_x4plus',
+        outscale: float = 4,
+        tile: int = 0,
+        tile_pad: int = 10,
+        pre_pad: int = 0,
+        alpha_upsampler: str = 'realesrgan',
+        face_enhance=False,
+        half=False,
+):
+    cv2_image = cv2.cvtColor(np.array(input_pil_image), cv2.COLOR_RGB2BGR)
+
+    upscaled_image = upscale(
+        input_image=cv2_image,
+        model_name=model_name,
+        outscale=outscale,
+        tile=tile,
+        tile_pad=tile_pad,
+        pre_pad=pre_pad,
+        alpha_upsampler=alpha_upsampler,
+        face_enhance=face_enhance,
+        half=half,
+    )
+
+    return Image.fromarray(cv2.cvtColor(upscaled_image, cv2.COLOR_BGR2RGB))
