@@ -6,6 +6,7 @@ import transformers
 from rudalle import get_rudalle_model, get_tokenizer, get_vae
 from rudalle.utils import seed_everything, torch_tensors_to_pil_list
 
+from services.utils import get_progress_bar
 from settings import ALLOWED_MEMORY, DEVICE, PRETRAINED_PATH, HAFT_PRECISION
 
 if ALLOWED_MEMORY < 4.5:
