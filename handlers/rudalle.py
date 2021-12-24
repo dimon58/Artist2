@@ -58,6 +58,7 @@ async def drawm(message: types.Message):
 
     _, num, *text = message.text.split()
     text = ' '.join(text)
+    num = int(num)
 
     ###################################################################################################################
 
