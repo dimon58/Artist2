@@ -1,5 +1,8 @@
 import io
 
+import tqdm
+import tqdm.contrib.telegram
+
 import settings
 
 
@@ -51,3 +54,13 @@ def calc_approx_upscale_time(w, h):
         approx_time += f" {seconds} сек"
 
     return approx_time
+
+
+def get_progress_bar(iterable, desc, chat_id=None):
+    if chat_id is None:
+        return tqdm.tqdm(iterable, desc=desc)
+
+    return tqdm.contrib.telegram.tqdm(
+        iterable, desc=desc,
+        token=settings.TELEGRAM_BOT_TOKEN, chat_id=chat_id
+    )

@@ -2,13 +2,11 @@ import argparse
 
 import more_itertools
 import torch
-import tqdm
-import tqdm.contrib.telegram
 import transformers
 from rudalle import get_rudalle_model, get_tokenizer, get_vae
 from rudalle.utils import seed_everything, torch_tensors_to_pil_list
 
-from settings import ALLOWED_MEMORY, DEVICE, TELEGRAM_BOT_TOKEN, PRETRAINED_PATH, HAFT_PRECISION
+from settings import ALLOWED_MEMORY, DEVICE, PRETRAINED_PATH, HAFT_PRECISION
 
 if ALLOWED_MEMORY < 4.5:
     DEVICE = 'cpu'
@@ -54,16 +52,6 @@ def print_stats():
         print('GPU part', round(k, 4))
 
     subprocess.call('nvidia-smi')
-
-
-def get_progress_bar(iterable, desc, chat_id=None):
-    if chat_id is None:
-        return tqdm.tqdm(iterable, desc=desc)
-
-    return tqdm.contrib.telegram.tqdm(
-        iterable, desc=desc,
-        token=TELEGRAM_BOT_TOKEN, chat_id=chat_id
-    )
 
 
 def generate_codebooks(text, top_k, top_p, images_num, image_prompts=None, temperature=1.0, bs=8,

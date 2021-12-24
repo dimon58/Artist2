@@ -7,7 +7,7 @@ import settings
 from core import dp
 from services.inference_realesrgan import upscale_pil
 from services.inference_rudalle import generate
-from services.utils import pil2tg, send_photo
+from services.utils import pil2tg, send_photo, get_progress_bar
 
 logger = logging.getLogger('root.handlers')
 
@@ -71,11 +71,10 @@ async def drawm(message: types.Message):
             await message.answer_photo(pil2tg(image))
         return
 
-    await message.answer(f'Улучшение качества')
-
     ###################################################################################################################
 
-    for image in images:
+    progress_bar = get_progress_bar(images, 'Улучшение качества', message.chat.id)
+    for image in progress_bar:
         start = time.perf_counter()
         upscaled_image = upscale_pil(
             image,
