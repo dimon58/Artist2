@@ -15,6 +15,7 @@ LOGS_FOLDER = 'logs'
 ALLOWED_MEMORY = 3.5  # choose your GPU memory in GB, min value 3.5GB
 DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
 HAFT_PRECISION = True
+GPU_FP32_PERFORMANCE = 1.911
 
 LOGGING_CONFIG = {
     'version': 1,
@@ -72,3 +73,5 @@ TELEGRAM_MAX_IMAGE_HEIGHT = 1280
 
 TELEGRAM_MAX_THUMB_WIDTH = 320
 TELEGRAM_MAX_THUMB_HEIGHT = 320
+
+

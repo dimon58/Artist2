@@ -14,7 +14,7 @@ from aiogram.types import ContentType
 import settings
 from core import dp
 from services.inference_realesrgan import upscale
-from services.utils import send_photo
+from services.utils import send_photo, calc_approx_upscale_time
 
 logger = logging.getLogger('root.handlers')
 
@@ -78,12 +78,13 @@ async def process_image(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data.state = None
 
-    await message.answer("Ожидайте")
-
-    start = time.perf_counter()
-
     original_image = cv2.imread(str(image_path), cv2.IMREAD_UNCHANGED)
     os.remove(image_path)
+
+    w, h, _ = original_image.shape
+    await message.answer(f"Ожидайте примерно {calc_approx_upscale_time(w, h)}")
+
+    start = time.perf_counter()
 
     upscaled_image = upscale(
         original_image,
