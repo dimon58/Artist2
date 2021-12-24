@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import torch
 from dotenv import load_dotenv
@@ -45,5 +46,4 @@ DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
 if ALLOWED_MEMORY < 5.0:
     DEVICE = 'cpu'
 
-# PRETRAINED_PATH = Path(__file__).parent / 'pretrained_models' / 'rudalle'
-PRETRAINED_PATH = '/tmp/rudalle'
+PRETRAINED_PATH = Path(__file__).parent / 'pretrained_models' / 'rudalle'
