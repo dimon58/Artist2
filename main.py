@@ -6,7 +6,8 @@ from aiogram import executor
 
 import settings
 
-os.makedirs('logs', exist_ok=True)
+os.makedirs(settings.LOGS_FOLDER, exist_ok=True)
+os.makedirs(settings.TEMP_FOLDER, exist_ok=True)
 
 logging.config.dictConfig(settings.LOGGING_CONFIG)
 root_logger = logging.getLogger('root')
