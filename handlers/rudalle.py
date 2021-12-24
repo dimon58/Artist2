@@ -88,4 +88,4 @@ async def drawm(message: types.Message):
 
         ###############################################################################################################
 
-        await send_photo(message, upscaled_image, image, 'result.png')
+        await send_photo(message, upscaled_image, image, 'result.png', settings.RUDALLE_ENABLE_PREVIEW)

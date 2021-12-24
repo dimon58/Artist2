@@ -17,7 +17,7 @@ def pil2tg(image):
     return buffer.getvalue()
 
 
-async def send_photo(message, pil_image, thumb_source, filename):
+async def send_photo(message, pil_image, thumb_source, filename, preview=False):
     """
     Отправляем сообщение в телеграм с учетом максимальных размеров.
     Если размер pil_image не превышает 1280x1280, то отправляем как обычную картинку, иначе как документ
@@ -32,6 +32,9 @@ async def send_photo(message, pil_image, thumb_source, filename):
 
     thumb_source.thumbnail((settings.TELEGRAM_MAX_THUMB_WIDTH, settings.TELEGRAM_MAX_THUMB_HEIGHT))
     thumb = pil2tg(thumb_source)
+
+    if preview:
+        await message.answer_photo(prepared_image)
 
     return await message.answer_document(prepared_image, thumb=thumb)
 
