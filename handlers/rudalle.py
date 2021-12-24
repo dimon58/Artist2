@@ -1,6 +1,7 @@
 import logging
 import time
 
+import torch
 from aiogram import types
 
 import settings
@@ -70,6 +71,7 @@ async def drawm(message: types.Message):
         for image in images:
             await message.answer_photo(pil2tg(image))
         return
+    torch.cuda.empty_cache()
 
     ###################################################################################################################
 
