@@ -46,7 +46,6 @@ def download_vae(dwt=False, cache_dir='/tmp/rudalle'):
 
 
 pretrained_path = Path(__file__).parent.parent / 'services' / 'nns' / 'pretrained_models' / 'rudalle'
-pretrained_path = '/tmp/rudalle'
 
 download_rudalle_model('Malevich', cache_dir=pretrained_path)
 download_tokenizer(cache_dir=pretrained_path)
