@@ -7,17 +7,7 @@ from rudalle import get_rudalle_model, get_tokenizer, get_vae
 from rudalle.utils import seed_everything, torch_tensors_to_pil_list
 
 from services.utils import get_progress_bar
-from settings import ALLOWED_MEMORY, DEVICE, PRETRAINED_PATH, HAFT_PRECISION
-
-if ALLOWED_MEMORY < 4.5:
-    DEVICE = 'cpu'
-    DALLE_BS = 1
-elif ALLOWED_MEMORY < 5:
-    DALLE_BS = 1
-elif ALLOWED_MEMORY <= 10.0:
-    DALLE_BS = 5
-else:
-    DALLE_BS = 5
+from settings import ALLOWED_MEMORY, DEVICE, PRETRAINED_PATH, HAFT_PRECISION, RUDALLE_BS
 
 pretrained_path = PRETRAINED_PATH / 'rudalle'
 
@@ -32,7 +22,7 @@ def print_stats():
     import subprocess
     from psutil import virtual_memory
 
-    print('ruDALL-E batch size:', DALLE_BS)
+    print('ruDALL-E batch size:', RUDALLE_BS)
 
     total_memory = torch.cuda.get_device_properties(0).total_memory / 2 ** 30
     if total_memory < ALLOWED_MEMORY:
@@ -103,7 +93,7 @@ def generate_codebooks(text, top_k, top_p, images_num, image_prompts=None, tempe
 
 
 def generate_encoded(text, top_k, top_p, images_num, chat_id=None):
-    return generate_codebooks(text, top_k=top_k, images_num=images_num, top_p=top_p, bs=DALLE_BS, chat_id=chat_id)
+    return generate_codebooks(text, top_k=top_k, images_num=images_num, top_p=top_p, bs=RUDALLE_BS, chat_id=chat_id)
 
 
 def decode_codebooks(codebooks, chat_id=None):

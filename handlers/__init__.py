@@ -1,4 +1,7 @@
 from . import esrgan
+from . import other
 from . import rudalle
 
-from . import other
+
+def register_handlers():
+    ...

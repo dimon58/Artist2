@@ -1,31 +1,16 @@
-import logging
 import os
 from pathlib import Path
 
-import GPUtil
 import torch
 from dotenv import load_dotenv
 
-logger = logging.getLogger('root.settings')
+from constants import RealESRGanModelsList
+
 load_dotenv()
 
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+# ------------------- Logging ------------------- #
 
-PRETRAINED_PATH = Path(__file__).parent / 'services' / 'nns' / 'pretrained_models'
-TEMP_FOLDER = Path(__file__).parent / 'temp'
-LOGS_FOLDER = 'logs'
-
-GPU_ID = 0
-try:
-    ALLOWED_MEMORY = GPUtil.getGPUs()[GPU_ID].memoryTotal / 1024  # choose your GPU memory in GB, min value 3.5GB
-except IndexError:
-    logger.error(f'There is no nvidia gpu with id = {GPU_ID}')
-    ALLOWED_MEMORY = 0
-
-DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
-HAFT_PRECISION = True
-GPU_FP32_PERFORMANCE = 1.911
-
+LOGS_FOLDER = 'logs'  # папка для логов
 LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -57,29 +42,38 @@ LOGGING_CONFIG = {
     }
 }
 
+# ------------------- Telegram ------------------- #
 
-class RealESRGanModelsList:
-    RealESRGAN_x4plus = 'RealESRGAN_x4plus'
-    RealESRNet_x4plus = 'RealESRNet_x4plus'
-    RealESRGAN_x4plus_anime_6B = 'RealESRGAN_x4plus_anime_6B'
-    RealESRGAN_x2plus = 'RealESRGAN_x2plus'
-    RealESRGANv2_anime_xsx2 = 'RealESRGANv2-anime-xsx2'
-    RealESRGANv2_animevideo_xsx2_nousm = 'RealESRGANv2-animevideo-xsx2-nousm'
-    RealESRGANv2_animevideo_xsx2 = 'RealESRGANv2-animevideo-xsx2'
-    RealESRGANv2_anime_xsx4 = 'RealESRGANv2-anime-xsx4'
-    RealESRGANv2_animevideo_xsx4_nousm = 'RealESRGANv2-animevideo-xsx4-nousm'
-    RealESRGANv2_animevideo_xsx4 = 'RealESRGANv2-animevideo-xsx4'
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')  # токен телеграм бота
 
+TELEGRAM_MAX_IMAGE_WIDTH = 1280  # максимальная ширина отправляемого изображения
+TELEGRAM_MAX_IMAGE_HEIGHT = 1280  # максимальная высота отправляемого изображения
 
-REALESRGAN_MODEL = RealESRGanModelsList.RealESRGAN_x4plus
-REALESRGAN_TILES = 350  # если много видеопамяти можно уменьшить до 0
+TELEGRAM_MAX_THUMB_WIDTH = 320  # максимальная ширина отправляемого изображения для предпросмотра
+TELEGRAM_MAX_THUMB_HEIGHT = 320  # максимальная высота отправляемого изображения для предпросмотра
+
+# ------------------- GPU ------------------- #
+
+# cpu, cuda, xpu, mkldnn, opengl, opencl, ideep, hip, ve, ort, mlc, xla, lazy, vulkan, meta, hpu
+DEVICE = ('cuda:0' if torch.cuda.is_available() else 'cpu')  # устройство для работы нейросетей. cuda
+
+ALLOWED_MEMORY = 'auto'  # choose your GPU memory in GB, min value 3.5GB or 'auto'
+
+# Использование половинной точности. Выбор из: True, False, 'auto'.
+# Если auto, то используется True, если возможно
+HAFT_PRECISION = 'auto'
+
+GPU_FP32_PERFORMANCE = 1.911  # теоретическая производительность GPU в TFlops
+
+# ------------------- NNS ------------------- #
+
+PRETRAINED_PATH = Path(__file__).parent / 'services' / 'nns' / 'pretrained_models'  # путь до хранилища весов моделей
+TEMP_FOLDER = Path(__file__).parent / 'temp'  # путь до папки с временными файлами
+
+REALESRGAN_MODEL = RealESRGanModelsList.RealESRGAN_x4plus  # модель для апскейла
+REALESRGAN_TILES = 0  # размер тайла для апскейла. если не хватает видеопамяти можно поставить около 350
 
 RUDALLE_SUPERRESOLUTION = True  # включить улучшение качества изображений после ru-dalle
-RUDALLE_REALESRGAN_MODEL_UPSCALER = RealESRGanModelsList.RealESRGAN_x4plus
-RUDALLE_ENABLE_PREVIEW = True
-
-TELEGRAM_MAX_IMAGE_WIDTH = 1280
-TELEGRAM_MAX_IMAGE_HEIGHT = 1280
-
-TELEGRAM_MAX_THUMB_WIDTH = 320
-TELEGRAM_MAX_THUMB_HEIGHT = 320
+RUDALLE_REALESRGAN_MODEL_UPSCALER = RealESRGanModelsList.RealESRGAN_x4plus  # модель для апскейла после ru-dalle
+RUDALLE_ENABLE_PREVIEW = True  # Включить отправку сжатой версии изображения, если исходное слишком большое
+RUDALLE_BS = 'auto'  # максимальное количество картинок, которые генерируются за раз
