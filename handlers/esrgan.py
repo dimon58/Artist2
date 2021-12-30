@@ -13,7 +13,7 @@ from aiogram.types import ContentType
 
 import settings
 from core import dp
-from services.inference_realesrgan import upscale
+from services.nns.inference_realesrgan import upscale
 from services.utils import send_photo, calc_approx_upscale_time
 
 logger = logging.getLogger('root.handlers')

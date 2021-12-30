@@ -6,8 +6,8 @@ from aiogram import types
 
 import settings
 from core import dp
-from services.inference_realesrgan import upscale_pil
-from services.inference_rudalle import generate
+from services.nns.inference_realesrgan import upscale_pil
+from services.nns.inference_rudalle import generate
 from services.utils import pil2tg, send_photo, get_progress_bar
 
 logger = logging.getLogger('root.handlers')
