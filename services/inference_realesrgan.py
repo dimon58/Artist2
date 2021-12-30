@@ -1,3 +1,4 @@
+import logging
 import os
 import urllib.error
 import urllib.request
@@ -14,6 +15,8 @@ from services.fixes.realesrgan_fixed import RealESRGANer
 
 file_path = Path(__file__).parent
 os.makedirs(os.path.join(file_path, 'pretrained_models'), exist_ok=True)
+
+logger = logging.getLogger('root.RealESRGan')
 
 
 def chose_model(model_name):
@@ -59,8 +62,8 @@ def determine_model_paths(model_name, url):
     model_path = os.path.join(file_path, 'nns', 'pretrained_models', model_file)
     if not os.path.isfile(model_path):
         try:
-            print(f'Downloading model {model_name}')
-            urllib.request.urlretrieve(url, os.path.join(file_path, 'pretrained_models', model_file))
+            logger.info(f'Downloading model {model_name}')
+            urllib.request.urlretrieve(url, model_path)
         except urllib.error.HTTPError:
             raise ValueError(f'Model {model_name} does not exist.')
 
