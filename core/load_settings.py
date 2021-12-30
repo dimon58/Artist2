@@ -48,8 +48,8 @@ def _setup_gpu():
         logger.error(f'Cuda is not available. Using cpu.')
         _set_cpu_as_device()
 
-    if not settings.DEVICE.startswith('cuda'):
-        logger.error(f'May be errors with device {settings.DEVICE}')
+    if not settings.DEVICE.startswith('cuda') and not settings.DEVICE.startswith('cpu'):
+        logger.warning(f'Unexpected device {settings.DEVICE}. May be errors with it.')
         settings.ALLOWED_MEMORY = 0
         settings.HAFT_PRECISION = False
         return
@@ -77,7 +77,7 @@ def _setup_gpu():
     if total_memory < settings.ALLOWED_MEMORY:
         msg = f'Total memory lower than allowed memory. Max allowed memory size is {round(total_memory, 1)} GB. ' \
               f'Setting allowed memory = total memory. Work may be unstable.'
-        logger.critical(msg)
+        logger.error(msg)
         settings.ALLOWED_MEMORY = total_memory
 
     if settings.HAFT_PRECISION == 'auto':
