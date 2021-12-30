@@ -6,17 +6,24 @@ from pathlib import Path
 
 import cv2
 import numpy as np
+import torch.cuda
 from PIL import Image
 from basicsr.archs.rrdbnet_arch import RRDBNet
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact
 
 from services.fixes.facexlib import GFPGANer
 from services.fixes.realesrgan_fixed import RealESRGANer
+from settings import PRETRAINED_PATH
 
 file_path = Path(__file__).parent
-os.makedirs(os.path.join(file_path, 'pretrained_models'), exist_ok=True)
 
 logger = logging.getLogger('root.RealESRGan')
+
+face_enhancer = GFPGANer(
+    model_path='https://github.com/TencentARC/GFPGAN/releases/download/v0.2.0/GFPGANCleanv1-NoCE-C2.pth',
+    upscale=2,
+    arch='clean',
+    channel_multiplier=2)
 
 
 def chose_model(model_name):
@@ -59,7 +66,7 @@ def chose_model(model_name):
 
 def determine_model_paths(model_name, url):
     model_file = url.split('/')[-1]
-    model_path = os.path.join(file_path, 'nns', 'pretrained_models', model_file)
+    model_path = os.path.join(PRETRAINED_PATH, model_file)
     if not os.path.isfile(model_path):
         try:
             logger.info(f'Downloading model {model_name}')
@@ -111,26 +118,26 @@ def upscale(
         pre_pad=pre_pad,
         half=half)
 
-    if face_enhance:  # Use GFPGAN for face enhancement
-        face_enhancer = GFPGANer(
-            model_path='https://github.com/TencentARC/GFPGAN/releases/download/v0.2.0/GFPGANCleanv1-NoCE-C2.pth',
-            upscale=outscale,
-            arch='clean',
-            channel_multiplier=2,
-            bg_upsampler=upsampler)
-
     try:
-        if face_enhance:
-            _, _, output = face_enhancer.enhance(input_image, has_aligned=False, only_center_face=False,
-                                                 paste_back=True)
+        if face_enhance:  # Use GFPGAN for face enhancement
+            face_enhancer.set_upscale_factor(upscale_factor=outscale)
+            _, _, output = face_enhancer.enhance(
+                input_image,
+                bg_upsampler=upsampler,
+                has_aligned=False,
+                only_center_face=False,
+                paste_back=True
+            )
         else:
             output, _ = upsampler.enhance(input_image, outscale=outscale)
 
     except RuntimeError as error:
         print('Error', error)
+        torch.cuda.empty_cache()
         raise RuntimeError(f'{error}.\nIf you encounter CUDA out of memory, try to set --tile with a smaller number.')
 
     else:
+        torch.cuda.empty_cache()
         return output
 
 
