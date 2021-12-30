@@ -69,11 +69,23 @@ def _setup_gpu():
         _set_cpu_as_device()
         return
 
+    total_memory = device_properties.total_memory / 1024 ** 3
+
     if settings.ALLOWED_MEMORY == 'auto':
-        settings.ALLOWED_MEMORY = device_properties.total_memory / 1024 ** 3
+        settings.ALLOWED_MEMORY = total_memory
+
+    if total_memory < settings.ALLOWED_MEMORY:
+        msg = f'Total memory lower than allowed memory. Max allowed memory size is {round(total_memory, 1)} GB. ' \
+              f'Setting allowed memory = total memory. Work may be unstable.'
+        logger.critical(msg)
+        settings.ALLOWED_MEMORY = total_memory
 
     if settings.HAFT_PRECISION == 'auto':
         settings.HAFT_PRECISION = torch.cuda.is_bf16_supported()
+
+    if torch.__version__ >= '1.8.0':
+        k = settings.ALLOWED_MEMORY / total_memory
+        torch.cuda.set_per_process_memory_fraction(k, 0)
 
 
 def load_settings():
