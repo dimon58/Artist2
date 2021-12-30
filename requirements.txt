@@ -5,3 +5,4 @@ coloredlogs
 aiogram
 psutil
 python-dotenv
+gputil

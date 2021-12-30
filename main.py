@@ -15,8 +15,12 @@ root_logger = logging.getLogger('root')
 coloredlogs.install(fmt=settings.LOGGING_CONFIG['formatters']['default_formatter']['format'])
 
 if __name__ == '__main__':
+
+    root_logger.info('Program start')
+    root_logger.info(f'Available {round(settings.ALLOWED_MEMORY, 1)} GB gpu memory')
+    root_logger.debug(f'Loading handlers')
+
     from core import *
     from handlers import *
 
-    root_logger.info('Program start')
     executor.start_polling(dp, skip_updates=True)

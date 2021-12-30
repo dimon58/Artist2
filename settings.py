@@ -1,18 +1,27 @@
+import logging
 import os
 from pathlib import Path
 
+import GPUtil
 import torch
 from dotenv import load_dotenv
 
+logger = logging.getLogger('root.settings')
 load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
-PRETRAINED_PATH = Path(__file__).parent / 'pretrained_models'
+PRETRAINED_PATH = Path(__file__).parent / 'services' / 'nns' / 'pretrained_models'
 TEMP_FOLDER = Path(__file__).parent / 'temp'
 LOGS_FOLDER = 'logs'
 
-ALLOWED_MEMORY = 3.5  # choose your GPU memory in GB, min value 3.5GB
+GPU_ID = 0
+try:
+    ALLOWED_MEMORY = GPUtil.getGPUs()[GPU_ID].memoryTotal / 1024  # choose your GPU memory in GB, min value 3.5GB
+except IndexError:
+    logger.error(f'There is no nvidia gpu with id = {GPU_ID}')
+    ALLOWED_MEMORY = 0
+
 DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
 HAFT_PRECISION = True
 GPU_FP32_PERFORMANCE = 1.911
