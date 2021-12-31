@@ -71,10 +71,12 @@ PRETRAINED_PATH = Path(__file__).parent / 'services' / 'nns' / 'pretrained_model
 TEMP_FOLDER = Path(__file__).parent / 'temp'  # путь до папки с временными файлами
 
 REALESRGAN_MODEL = RealESRGanModelsList.RealESRGAN_x4plus  # модель для апскейла
+REALESRGAN_UPSCALE = 4  # результирующее улучшение изображения
 # размер тайла для апскейла. если не хватает видеопамяти можно поставить 350. Если установить 0, то не будет разбивки.
 REALESRGAN_TILES = 640  # при 640 будет не более 4 тайлов при апскейле изображения из телеграма
 
 RUDALLE_SUPERRESOLUTION = True  # включить улучшение качества изображений после ru-dalle
-RUDALLE_REALESRGAN_MODEL_UPSCALER = RealESRGanModelsList.RealESRGAN_x4plus  # модель для апскейла после ru-dalle
+RUDALLE_REALESRGAN_MODEL_UPSCALER = RealESRGanModelsList.RealESRGAN_x2plus  # модель для апскейла после ru-dalle
+RUDALLE_REALESRGAN_UPSCALE = 4  # результирующее улучшение изображения после ru-dalle
 RUDALLE_ENABLE_PREVIEW = True  # Включить отправку сжатой версии изображения, если исходное слишком большое
 RUDALLE_BS = 'auto'  # максимальное количество картинок, которые генерируются за раз

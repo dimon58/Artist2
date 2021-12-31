@@ -89,6 +89,7 @@ async def process_image(message: types.Message, state: FSMContext):
     upscaled_image = upscale(
         original_image,
         model_name=settings.REALESRGAN_MODEL,
+        outscale=settings.REALESRGAN_UPSCALE,
         tile=settings.REALESRGAN_TILES,
         face_enhance=True,
         half=settings.HAFT_PRECISION

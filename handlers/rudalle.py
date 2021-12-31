@@ -38,6 +38,7 @@ async def draw(message: types.Message):
     upscaled_image = upscale_pil(
         image,
         model_name=settings.RUDALLE_REALESRGAN_MODEL_UPSCALER,
+        outscale=settings.RUDALLE_REALESRGAN_UPSCALE,
         tile=settings.REALESRGAN_TILES,
         face_enhance=True,
         half=settings.HAFT_PRECISION
@@ -81,6 +82,7 @@ async def drawm(message: types.Message):
         upscaled_image = upscale_pil(
             image,
             model_name=settings.RUDALLE_REALESRGAN_MODEL_UPSCALER,
+            outscale=settings.RUDALLE_REALESRGAN_UPSCALE,
             tile=settings.REALESRGAN_TILES,
             face_enhance=True,
             half=settings.HAFT_PRECISION
