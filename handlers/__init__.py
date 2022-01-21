@@ -1,3 +1,4 @@
+from . import animeganv2
 from . import esrgan
 from . import rudalle
 

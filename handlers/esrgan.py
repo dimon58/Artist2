@@ -1,7 +1,6 @@
 import logging
 import os
 import time
-import uuid
 from typing import Optional
 
 import cv2
@@ -14,7 +13,7 @@ from aiogram.types import ContentType
 import settings
 from core import dp
 from services.nns.inference_realesrgan import upscale
-from services.utils import send_photo, calc_approx_upscale_time
+from services.utils import send_photo, calc_approx_upscale_time, download_photo
 
 logger = logging.getLogger('root.handlers')
 
@@ -59,21 +58,10 @@ async def failed_process_image(message: types.Message):
 async def process_image(message: types.Message, state: FSMContext):
     logger.info(f'Upscale image by user {message.from_user.id}')
 
-    if message.content_type == ContentType.PHOTO:
-        image = message.photo[-1]
-        image_name = f'image_{uuid.uuid4().hex}.jpg'
-
-    else:
-        if not message.document.mime_type.startswith('image/'):
-            logger.info(f'Wrong image format for upscale by user {message.from_user.id}')
-            return await message.reply(f"Нужно отправить изображение, а не {message.document.mime_type}")
-
-        image = message.document
-        image_name = f'image_{uuid.uuid4().hex}.{message.document.mime_type.split("/")[-1]}'
-
-    image_path = settings.TEMP_FOLDER / image_name
-    logger.debug(f'Downloading image from user {message.from_user.id}')
-    await image.download(destination_file=image_path)
+    try:
+        image_path = await download_photo(message, 'upscaling')
+    except ValueError:
+        return await message.reply(f"Нужно отправить изображение, а не {message.document.mime_type}")
 
     async with state.proxy() as data:
         data.state = None

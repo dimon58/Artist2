@@ -8,9 +8,14 @@ from constants import RealESRGanModelsList
 
 load_dotenv()
 
+# -------------------- paths -------------------- #
+
+NNS_PATH = Path(__file__).parent / 'services' / 'nns'  # путь до папки с нейросетями
+TEMP_FOLDER = Path(__file__).parent / 'temp'  # путь до папки с временными файлами
+LOGS_FOLDER = 'logs'  # папка для логов
+
 # ------------------- Logging ------------------- #
 
-LOGS_FOLDER = 'logs'  # папка для логов
 LOGGING_CONFIG = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -66,9 +71,7 @@ HAFT_PRECISION = 'auto'
 GPU_FP32_PERFORMANCE = 1.911  # теоретическая производительность GPU в TFlops
 
 # ------------------- NNS ------------------- #
-
-PRETRAINED_PATH = Path(__file__).parent / 'services' / 'nns' / 'pretrained_models'  # путь до хранилища весов моделей
-TEMP_FOLDER = Path(__file__).parent / 'temp'  # путь до папки с временными файлами
+PRETRAINED_PATH = NNS_PATH / 'pretrained_models'  # путь до хранилища весов моделей
 
 REALESRGAN_MODEL = RealESRGanModelsList.RealESRGAN_x4plus  # модель для апскейла
 REALESRGAN_UPSCALE = 4  # результирующее улучшение изображения
@@ -80,3 +83,11 @@ RUDALLE_REALESRGAN_MODEL_UPSCALER = RealESRGanModelsList.RealESRGAN_x2plus  # м
 RUDALLE_REALESRGAN_UPSCALE = 4  # результирующее улучшение изображения после ru-dalle
 RUDALLE_ENABLE_PREVIEW = True  # Включить отправку сжатой версии изображения, если исходное слишком большое
 RUDALLE_BS = 'auto'  # максимальное количество картинок, которые генерируются за раз
+
+# выбор предобученой модели для трансформации в аниме
+# варианты: celeba_distill.pt, face_paint_512_v1.pt, face_paint_512_v2.pt, paprika.pt
+ANIMEGANV2_PATH = NNS_PATH / 'animegan2-pytorch' / 'weights' / 'face_paint_512_v2.pt'
+# так как большие разрешения фото для трансформации в аниме не влезают в память,
+# то нужно уменьшить разрешение до некоторого значения
+ANIMEGANV2_DOWNSCALE_SIZE = 512
+ANIMEGANV2_X32 = None  # Resize images to multiple of 32
